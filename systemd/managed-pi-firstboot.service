@@ -1,0 +1,12 @@
+[Unit]
+Description=Provision Managed Pi from boot partition
+After=local-fs.target
+ConditionPathExists=/boot/firmware/managed-pi.env
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/managed-pi-firstboot
+
+[Install]
+WantedBy=multi-user.target
+

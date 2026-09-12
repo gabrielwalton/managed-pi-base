@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+
+SOURCE=/boot/firmware/managed-pi.env
+TARGET=/etc/managed-pi/agent.env
+
+if [ ! -f "$SOURCE" ]; then
+  exit 0
+fi
+
+install -d -m 0750 -o root -g managedpi /etc/managed-pi
+install -m 0640 -o root -g managedpi "$SOURCE" "$TARGET"
+rm -f "$SOURCE"
+/usr/bin/systemctl enable --now managed-pi-agent.service
+/usr/bin/systemctl disable managed-pi-firstboot.service
+

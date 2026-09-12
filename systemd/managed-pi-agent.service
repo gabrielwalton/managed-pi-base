@@ -1,0 +1,22 @@
+[Unit]
+Description=Managed Pi GitHub deployment agent
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=managedpi
+Group=managedpi
+EnvironmentFile=/etc/managed-pi/agent.env
+ExecStart=/opt/managed-pi/agent-venv/bin/managed-pi-agent
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/opt/managed-pi
+
+[Install]
+WantedBy=multi-user.target
+

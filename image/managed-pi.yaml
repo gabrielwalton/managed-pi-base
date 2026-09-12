@@ -1,0 +1,13 @@
+include:
+  file: trixie-minbase.yaml
+
+image:
+  name: managed-pi-base
+  root_part_size: 400%
+
+layer:
+  managed_pi: managed-pi-base
+
+managedpi:
+  source: ${@SRCROOT}
+

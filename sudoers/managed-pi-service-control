@@ -1,0 +1,1 @@
+managedpi ALL=(root) NOPASSWD: /usr/local/sbin/managed-pi-service-control restart, /usr/local/sbin/managed-pi-service-control is-active

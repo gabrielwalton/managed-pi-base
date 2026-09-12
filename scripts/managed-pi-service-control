@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+
+case "${1:-}" in
+  restart)
+    exec /usr/bin/systemctl restart managed-pi-app.service
+    ;;
+  is-active)
+    exec /usr/bin/systemctl is-active --quiet managed-pi-app.service
+    ;;
+  *)
+    echo "Allowed actions: restart, is-active" >&2
+    exit 64
+    ;;
+esac
+

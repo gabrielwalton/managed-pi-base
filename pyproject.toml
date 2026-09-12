@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "managed-pi-agent"
+version = "0.1.0"
+description = "Home Assistant controlled, rollback-safe GitHub deployments for Raspberry Pi"
+requires-python = ">=3.11"
+dependencies = ["paho-mqtt>=2.1,<3"]
+
+[project.scripts]
+managed-pi-agent = "managed_pi_agent.agent:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
