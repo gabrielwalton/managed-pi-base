@@ -1,6 +1,9 @@
 name: build Raspberry Pi image
 
 on:
+  push:
+    tags:
+      - "v*"
   workflow_dispatch:
     inputs:
       device:
@@ -15,12 +18,14 @@ on:
           - rpizero2w
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 120
+    env:
+      DEVICE: ${{ inputs.device || 'rpi5' }}
     steps:
       - uses: actions/checkout@v4
       - name: Fetch the official Raspberry Pi image builder
@@ -30,17 +35,28 @@ jobs:
       - name: Validate Managed Pi layer metadata
         run: ./rpi-image-gen/rpi-image-gen metadata --lint ./layer/managed-pi-base.yaml
       - name: Build image
-        run: ./image/build.sh ./rpi-image-gen "${{ inputs.device }}"
+        run: ./image/build.sh ./rpi-image-gen "$DEVICE"
       - name: Compress image
         run: |
           image_path=./work/image-managed-pi-base/managed-pi-base.img
           test -f "$image_path"
           xz -T0 -6 "$image_path"
           mkdir -p dist
-          mv "$image_path.xz" "dist/managed-pi-base-${{ inputs.device }}.img.xz"
+          mv "$image_path.xz" "dist/managed-pi-base-$DEVICE.img.xz"
+          (cd dist && sha256sum *.img.xz > SHA256SUMS)
       - uses: actions/upload-artifact@v4
         with:
-          name: managed-pi-base-${{ inputs.device }}
-          path: dist/*.img.xz
+          name: managed-pi-base-${{ env.DEVICE }}
+          path: |
+            dist/*.img.xz
+            dist/SHA256SUMS
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 90
+      - name: Publish versioned image release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --title "Managed Pi Base $GITHUB_REF_NAME" \
+            --notes "Reusable Raspberry Pi base image. This release has passed the automated image build; complete the hardware acceptance checklist before production rollout."
