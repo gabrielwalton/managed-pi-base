@@ -6,7 +6,7 @@ import socket
 import subprocess
 import threading
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import paho.mqtt.client as mqtt
 
@@ -18,7 +18,7 @@ LOG = logging.getLogger("managed-pi-agent")
 
 
 def now() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 class Agent:

@@ -1,4 +1,5 @@
 import pytest
+
 from managed_pi_agent.config import load_config
 
 
