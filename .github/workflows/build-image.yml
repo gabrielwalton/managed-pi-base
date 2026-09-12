@@ -16,6 +16,11 @@ on:
           - rpi4
           - rpi3
           - rpizero2w
+      release_tag:
+        description: Optional existing release tag to add this image to
+        required: false
+        default: ""
+        type: string
 
 permissions:
   contents: write
@@ -60,3 +65,8 @@ jobs:
           gh release create "$GITHUB_REF_NAME" dist/* \
             --title "Managed Pi Base $GITHUB_REF_NAME" \
             --notes "Reusable Raspberry Pi base image. This release has passed the automated image build; complete the hardware acceptance checklist before production rollout."
+      - name: Add image to an existing release
+        if: github.event_name == 'workflow_dispatch' && inputs.release_tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ inputs.release_tag }}" dist/* --clobber
