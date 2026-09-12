@@ -1,0 +1,47 @@
+name: build Raspberry Pi image
+
+on:
+  workflow_dispatch:
+    inputs:
+      device:
+        description: Raspberry Pi device family
+        required: true
+        default: rpi5
+        type: choice
+        options:
+          - rpi5
+          - rpi4
+          - rpi3
+          - rpizero2w
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch the official Raspberry Pi image builder
+        run: git clone --depth 1 --branch v2.6.0 https://github.com/raspberrypi/rpi-image-gen.git
+      - name: Install image-builder dependencies
+        run: sudo ./rpi-image-gen/install_deps.sh
+      - name: Validate Managed Pi layer metadata
+        run: ./rpi-image-gen/rpi-image-gen metadata --lint ./layer/managed-pi-base.yaml
+      - name: Build image
+        run: ./image/build.sh ./rpi-image-gen "${{ inputs.device }}"
+      - name: Compress image
+        run: |
+          image_path=$(find ./rpi-image-gen/work -type f -name '*.img' -print -quit)
+          test -n "$image_path"
+          xz -T0 -6 "$image_path"
+          mkdir -p dist
+          mv "$image_path.xz" "dist/managed-pi-base-${{ inputs.device }}.img.xz"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: managed-pi-base-${{ inputs.device }}
+          path: dist/*.img.xz
+          if-no-files-found: error
+          retention-days: 14
+

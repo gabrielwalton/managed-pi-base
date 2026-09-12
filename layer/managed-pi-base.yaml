@@ -10,7 +10,7 @@
 # X-Env-Var-source: /invalid
 # X-Env-Var-source-Desc: Absolute path to the Managed Pi Base source tree
 # X-Env-Var-source-Required: y
-# X-Env-Var-source-Valid: directory
+# X-Env-Var-source-Valid: dir
 # X-Env-Var-source-Set: y
 # METAEND
 ---
@@ -41,4 +41,3 @@ mmdebstrap:
       install -m 0440 $IGconf_managedpi_source/sudoers/managed-pi-service-control $1/etc/sudoers.d/managed-pi-service-control
       chroot $1 visudo -cf /etc/sudoers.d/managed-pi-service-control
     - $BDEBSTRAP_HOOKS/enable-units "$1" managed-pi-firstboot managed-pi-app
-
