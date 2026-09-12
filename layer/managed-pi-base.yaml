@@ -5,13 +5,6 @@
 # X-Env-Layer-Desc: Managed Pi agent, system services and first-boot provisioning
 # X-Env-Layer-Requires: systemd-net-min,systemd-timesyncd
 #
-# X-Env-VarPrefix: managedpi
-#
-# X-Env-Var-source: /invalid
-# X-Env-Var-source-Desc: Absolute path to the Managed Pi Base source tree
-# X-Env-Var-source-Required: y
-# X-Env-Var-source-Valid: dir,
-# X-Env-Var-source-Set: y
 # METAEND
 ---
 mmdebstrap:
@@ -30,14 +23,14 @@ mmdebstrap:
       install -d -m 0755 $1/opt/managed-pi $1/opt/managed-pi/agent-source
       install -d -m 0750 -o 0 -g $(chroot $1 id -g managedpi) $1/etc/managed-pi
       install -d -m 0750 -o $(chroot $1 id -u managedpi) -g $(chroot $1 id -g managedpi) $1/opt/managed-pi/cache $1/opt/managed-pi/releases $1/opt/managed-pi/data
-      cp -a $IGconf_managedpi_source/src $IGconf_managedpi_source/pyproject.toml $1/opt/managed-pi/agent-source/
+      cp -a $SRCROOT/src $SRCROOT/pyproject.toml $1/opt/managed-pi/agent-source/
       chroot $1 python3 -m venv /opt/managed-pi/agent-venv
       chroot $1 /opt/managed-pi/agent-venv/bin/pip install --disable-pip-version-check /opt/managed-pi/agent-source
-      install -m 0755 $IGconf_managedpi_source/scripts/managed-pi-service-control $1/usr/local/sbin/managed-pi-service-control
-      install -m 0755 $IGconf_managedpi_source/scripts/managed-pi-firstboot $1/usr/local/sbin/managed-pi-firstboot
-      install -m 0644 $IGconf_managedpi_source/systemd/managed-pi-agent.service $1/etc/systemd/system/managed-pi-agent.service
-      install -m 0644 $IGconf_managedpi_source/systemd/managed-pi-app.service $1/etc/systemd/system/managed-pi-app.service
-      install -m 0644 $IGconf_managedpi_source/systemd/managed-pi-firstboot.service $1/etc/systemd/system/managed-pi-firstboot.service
-      install -m 0440 $IGconf_managedpi_source/sudoers/managed-pi-service-control $1/etc/sudoers.d/managed-pi-service-control
+      install -m 0755 $SRCROOT/scripts/managed-pi-service-control $1/usr/local/sbin/managed-pi-service-control
+      install -m 0755 $SRCROOT/scripts/managed-pi-firstboot $1/usr/local/sbin/managed-pi-firstboot
+      install -m 0644 $SRCROOT/systemd/managed-pi-agent.service $1/etc/systemd/system/managed-pi-agent.service
+      install -m 0644 $SRCROOT/systemd/managed-pi-app.service $1/etc/systemd/system/managed-pi-app.service
+      install -m 0644 $SRCROOT/systemd/managed-pi-firstboot.service $1/etc/systemd/system/managed-pi-firstboot.service
+      install -m 0440 $SRCROOT/sudoers/managed-pi-service-control $1/etc/sudoers.d/managed-pi-service-control
       chroot $1 visudo -cf /etc/sudoers.d/managed-pi-service-control
     - $BDEBSTRAP_HOOKS/enable-units "$1" managed-pi-firstboot managed-pi-app

@@ -7,7 +7,3 @@ image:
 
 layer:
   managed_pi: managed-pi-base
-
-managedpi:
-  source: ${@SRCROOT}
-
