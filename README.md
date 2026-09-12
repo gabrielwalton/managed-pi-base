@@ -2,6 +2,10 @@
 
 A reusable Raspberry Pi foundation for deploying an application from GitHub by pressing a button in Home Assistant.
 
+The image also includes a television kiosk layer. When an installed application
+serves a page on port 8080, Chromium starts it fullscreen on HDMI with video
+autoplay enabled; no desktop, keyboard or local login is required.
+
 This project generalises the working SolarPi flow:
 
 1. Home Assistant publishes a non-retained MQTT command.
@@ -74,4 +78,7 @@ Accepted commands are `check`, `update`, `rollback`, `restart`, and `status`. Co
 
 ## Current status
 
-The management agent, atomic release deployment, automatic rollback, system services, first-boot secret migration, MQTT Discovery, configuration validation and a reproducible `rpi-image-gen` layer are implemented. The NAS photo-viewer application is the next separate repository built on top of this base.
+The management agent, atomic release deployment, automatic rollback, HDMI kiosk,
+system services, first-boot secret migration, MQTT Discovery, configuration
+validation and reproducible Pi 4/Pi 5 images are implemented. Applications can
+also inherit the Pi's MQTT identity and connection without duplicating secrets.

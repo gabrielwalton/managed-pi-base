@@ -29,8 +29,11 @@ jobs:
   build:
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 120
+    strategy:
+      matrix:
+        device: ${{ fromJSON(github.event_name == 'workflow_dispatch' && format('["{0}"]', inputs.device) || '["rpi4","rpi5"]') }}
     env:
-      DEVICE: ${{ inputs.device || 'rpi5' }}
+      DEVICE: ${{ matrix.device }}
     steps:
       - uses: actions/checkout@v4
       - name: Fetch the official Raspberry Pi image builder
@@ -48,13 +51,13 @@ jobs:
           xz -T0 -6 "$image_path"
           mkdir -p dist
           mv "$image_path.xz" "dist/managed-pi-base-$DEVICE.img.xz"
-          (cd dist && sha256sum *.img.xz > SHA256SUMS)
+          (cd dist && sha256sum *.img.xz > "managed-pi-base-$DEVICE.img.xz.sha256")
       - uses: actions/upload-artifact@v4
         with:
           name: managed-pi-base-${{ env.DEVICE }}
           path: |
             dist/*.img.xz
-            dist/SHA256SUMS
+            dist/*.sha256
           if-no-files-found: error
           retention-days: 90
       - name: Publish versioned image release
@@ -62,9 +65,16 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" dist/* \
-            --title "Managed Pi Base $GITHUB_REF_NAME" \
-            --notes "Reusable Raspberry Pi base image. This release has passed the automated image build; complete the hardware acceptance checklist before production rollout."
+          for attempt in 1 2 3; do
+            if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+              break
+            fi
+            gh release create "$GITHUB_REF_NAME" \
+              --title "Managed Pi Base $GITHUB_REF_NAME" \
+              --notes "Reusable Raspberry Pi base image. This release has passed the automated image build; complete the hardware acceptance checklist before production rollout." && break
+            sleep 2
+          done
+          gh release upload "$GITHUB_REF_NAME" dist/* --clobber
       - name: Add image to an existing release
         if: github.event_name == 'workflow_dispatch' && inputs.release_tag != ''
         env:

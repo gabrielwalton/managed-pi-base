@@ -3,7 +3,8 @@ set -eu
 
 case "${1:-}" in
   restart)
-    exec /usr/bin/systemctl restart managed-pi-app.service
+    /usr/bin/systemctl restart managed-pi-app.service
+    exec /usr/bin/systemctl restart managed-pi-kiosk.service
     ;;
   is-active)
     exec /usr/bin/systemctl is-active --quiet managed-pi-app.service
@@ -13,4 +14,3 @@ case "${1:-}" in
     exit 64
     ;;
 esac
-

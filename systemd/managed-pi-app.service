@@ -10,6 +10,7 @@ User=managedpi
 Group=managedpi
 WorkingDirectory=/opt/managed-pi/current
 EnvironmentFile=-/etc/managed-pi/app.env
+EnvironmentFile=-/etc/managed-pi/agent.env
 ExecStart=/bin/bash /opt/managed-pi/current/deploy/run.sh
 Restart=always
 RestartSec=3
@@ -21,4 +22,3 @@ ReadWritePaths=/opt/managed-pi/data
 
 [Install]
 WantedBy=multi-user.target
-

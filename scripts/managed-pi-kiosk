@@ -1,0 +1,18 @@
+#!/bin/sh
+set -eu
+
+viewer_url="${MANAGED_PI_VIEWER_URL:-http://127.0.0.1:8080}"
+
+while ! /usr/bin/curl --fail --silent --output /dev/null "$viewer_url/api/health"; do
+  /usr/bin/sleep 2
+done
+
+exec /usr/bin/cage -s -- /usr/bin/chromium \
+  --kiosk \
+  --no-first-run \
+  --disable-session-crashed-bubble \
+  --disable-infobars \
+  --autoplay-policy=no-user-gesture-required \
+  --ozone-platform=wayland \
+  --enable-features=UseOzonePlatform \
+  "$viewer_url"
