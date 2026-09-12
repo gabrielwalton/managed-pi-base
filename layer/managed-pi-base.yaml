@@ -10,7 +10,7 @@
 # X-Env-Var-source: /invalid
 # X-Env-Var-source-Desc: Absolute path to the Managed Pi Base source tree
 # X-Env-Var-source-Required: y
-# X-Env-Var-source-Valid: dir
+# X-Env-Var-source-Valid: dir,
 # X-Env-Var-source-Set: y
 # METAEND
 ---
