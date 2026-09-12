@@ -4,6 +4,6 @@ __pycache__/
 *.egg-info/
 .pytest_cache/
 provision.env
+managed-pi.env
 work/
 dist/
-
