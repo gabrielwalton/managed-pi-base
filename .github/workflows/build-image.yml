@@ -33,7 +33,7 @@ jobs:
         run: ./image/build.sh ./rpi-image-gen "${{ inputs.device }}"
       - name: Compress image
         run: |
-          image_path=$(find ./rpi-image-gen/work -type f -name '*.img' -print -quit)
+          image_path=$(find ./work -path '*/image-*/*.img' -type f -print -quit)
           test -n "$image_path"
           xz -T0 -6 "$image_path"
           mkdir -p dist
@@ -44,4 +44,3 @@ jobs:
           path: dist/*.img.xz
           if-no-files-found: error
           retention-days: 14
-
