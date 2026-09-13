@@ -49,3 +49,17 @@ Hardware validation used a Raspberry Pi 4 Model B on wired Ethernet with the
 
 These unchecked items do not change the provisioning format. Record their result
 here before labelling a later release as fully production-accepted.
+
+## v0.3.0 reflash follow-up
+
+The same Pi 4 was reflashed with the `v0.3.0` image and provisioned unattended
+from the BOOT environment file. It reported agent version `0.3.0`, installed the
+photo-viewer application from GitHub, retained its stable device identity and
+completed a requested application/kiosk restart in 5.4 seconds. This confirms
+the bounded, non-blocking restart fix resolved the earlier approximately
+96-second restart delay.
+
+The application then connected to an SMB library, indexed 20,001 media items,
+served a byte-range request successfully and reported the changing current item
+from the HDMI Chromium session. Direct visual confirmation of the external
+display remains a separate human acceptance step.
