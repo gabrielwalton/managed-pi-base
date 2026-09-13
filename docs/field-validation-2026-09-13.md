@@ -77,3 +77,12 @@ the local viewer succeeded on the same HDMI session. An application restart
 restored photo mode while preserving its private configuration, NAS credentials,
 selected folder and a 38,336-item catalogue. Site-specific Home Assistant
 trusted-network configuration remains deliberately outside the reusable image.
+
+## v0.3.2 HDMI audio correction
+
+Testing on the Samsung television confirmed that the display's HDMI audio device
+was available and produced a direct ALSA test tone, while Chromium had selected
+the Pi's analogue headphone output. Version 0.3.2 makes the kiosk launcher inspect
+the kernel HDMI ELD state at each start and pass the connected HDMI ALSA device to
+Chromium explicitly. This remains to be confirmed with video playback after the
+0.3.2 image is flashed.

@@ -16,6 +16,25 @@ while ! /usr/bin/curl --fail --silent --output /dev/null "$viewer_url/api/health
   /usr/bin/sleep 2
 done
 
+audio_device="${MANAGED_PI_ALSA_OUTPUT_DEVICE:-}"
+if [ -z "$audio_device" ]; then
+  for eld_path in /proc/asound/card*/eld*; do
+    [ -r "$eld_path" ] || continue
+    if /usr/bin/grep -q '^monitor_present[[:space:]]*1' "$eld_path" && \
+       /usr/bin/grep -q '^eld_valid[[:space:]]*1' "$eld_path"; then
+      card_path="${eld_path%/*}"
+      card_number="${card_path##*/card}"
+      audio_device="plughw:${card_number},0"
+      break
+    fi
+  done
+fi
+
+audio_option=""
+if [ -n "$audio_device" ]; then
+  audio_option="--alsa-output-device=$audio_device"
+fi
+
 exec /usr/bin/cage -s -- /usr/bin/chromium \
   --kiosk \
   --no-first-run \
@@ -24,4 +43,5 @@ exec /usr/bin/cage -s -- /usr/bin/chromium \
   --autoplay-policy=no-user-gesture-required \
   --ozone-platform=wayland \
   --enable-features=UseOzonePlatform \
+  $audio_option \
   "$kiosk_url"

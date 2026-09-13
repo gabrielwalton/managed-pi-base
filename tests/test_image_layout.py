@@ -42,8 +42,8 @@ def test_reported_agent_version_matches_package_version():
     module = (ROOT / "src" / "managed_pi_agent" / "__init__.py").read_text(
         encoding="utf-8"
     )
-    assert 'version = "0.3.1"' in package
-    assert '__version__ = "0.3.1"' in module
+    assert 'version = "0.3.2"' in package
+    assert '__version__ = "0.3.2"' in module
 
 
 def test_restart_does_not_wait_for_kiosk_shutdown_timeout():
@@ -63,3 +63,12 @@ def test_kiosk_can_read_an_application_selected_url():
     assert "MANAGED_PI_KIOSK_URL_FILE" in kiosk
     assert 'http://*|https://*) kiosk_url="$requested_url"' in kiosk
     assert '"$kiosk_url"' in kiosk
+
+
+def test_kiosk_routes_audio_to_the_connected_hdmi_output():
+    kiosk = (ROOT / "scripts" / "managed-pi-kiosk").read_text(encoding="utf-8")
+    assert "MANAGED_PI_ALSA_OUTPUT_DEVICE" in kiosk
+    assert "^monitor_present[[:space:]]*1" in kiosk
+    assert "^eld_valid[[:space:]]*1" in kiosk
+    assert 'audio_device="plughw:${card_number},0"' in kiosk
+    assert "--alsa-output-device=$audio_device" in kiosk
