@@ -20,6 +20,9 @@ Hardware validation used a Raspberry Pi 4 Model B on wired Ethernet with the
 - MQTT reconnect after a temporary keepalive timeout was observed.
 - A requested application restart completed successfully and preserved the
   installed and previous release pointers.
+- A deliberate requested rollback selected the previous healthy commit, passed
+  its health check and reported the changed version; a following Update restored
+  the latest commit successfully.
 
 ## Defects found and fixed during validation
 
@@ -39,7 +42,8 @@ Hardware validation used a Raspberry Pi 4 Model B on wired Ethernet with the
 ## Still to validate when the equipment is available
 
 - HDMI kiosk rendering, video playback and audio on the target television.
-- Deliberately unhealthy-release automatic rollback.
+- Deliberately unhealthy-release automatic rollback (requested rollback is
+  already confirmed).
 - Power interruption during release preparation.
 - Retained-command rejection and concurrent-command locking on hardware.
 
