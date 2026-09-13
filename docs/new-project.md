@@ -70,3 +70,17 @@ health check. A failed update returns to the prior healthy release when one exis
 - Test loss and restoration of MQTT and power before unattended deployment.
 - For HDMI projects, verify the kiosk at the target resolution and check audio,
   video codecs and HDMI-CEC behaviour on the actual display.
+
+## Optional unattended Home Assistant dashboard sign-in
+
+Do not bake a Home Assistant password, token or user ID into the reusable image.
+For a kiosk that must open a Home Assistant dashboard unattended, reserve the
+Pi's address and configure Home Assistant's `trusted_networks` authentication
+provider for that exact `/32` address. Map it only to a dedicated non-admin
+display user, enable bypass only for that mapping, and keep the normal
+`homeassistant` authentication provider as the fallback.
+
+This is a per-site Home Assistant setting, not part of the SD image. Validate
+Home Assistant's configuration before restarting it. A whole-subnet trusted
+rule is inappropriate because every device on that subnet would inherit the
+trust boundary.

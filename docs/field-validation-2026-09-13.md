@@ -63,3 +63,17 @@ The application then connected to an SMB library, indexed 20,001 media items,
 served a byte-range request successfully and reported the changing current item
 from the HDMI Chromium session. Direct visual confirmation of the external
 display remains a separate human acceptance step.
+
+## v0.3.1 clean-image follow-up
+
+The Pi 4 was then clean-flashed with the `v0.3.1` image. It consumed a fresh
+BOOT provisioning file, came online as agent `0.3.1`, and installed the
+application without SSH, keyboard input or a local login. The application
+retained its stable hardware-derived identity.
+
+The dynamic kiosk target was exercised through Home Assistant in all three
+application states: photos, collage and dashboard. Returning from dashboard to
+the local viewer succeeded on the same HDMI session. An application restart
+restored photo mode while preserving its private configuration, NAS credentials,
+selected folder and a 38,336-item catalogue. Site-specific Home Assistant
+trusted-network configuration remains deliberately outside the reusable image.
