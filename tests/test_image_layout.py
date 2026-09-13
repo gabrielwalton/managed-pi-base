@@ -1,6 +1,5 @@
 from pathlib import Path
 
-
 ROOT = Path(__file__).parents[1]
 
 
@@ -43,8 +42,8 @@ def test_reported_agent_version_matches_package_version():
     module = (ROOT / "src" / "managed_pi_agent" / "__init__.py").read_text(
         encoding="utf-8"
     )
-    assert 'version = "0.3.0"' in package
-    assert '__version__ = "0.3.0"' in module
+    assert 'version = "0.3.1"' in package
+    assert '__version__ = "0.3.1"' in module
 
 
 def test_restart_does_not_wait_for_kiosk_shutdown_timeout():
@@ -57,3 +56,10 @@ def test_restart_does_not_wait_for_kiosk_shutdown_timeout():
     assert "--no-block restart managed-pi-app.service" in control
     assert "--no-block restart managed-pi-kiosk.service" in control
     assert "TimeoutStopSec=10" in kiosk
+
+
+def test_kiosk_can_read_an_application_selected_url():
+    kiosk = (ROOT / "scripts" / "managed-pi-kiosk").read_text(encoding="utf-8")
+    assert "MANAGED_PI_KIOSK_URL_FILE" in kiosk
+    assert 'http://*|https://*) kiosk_url="$requested_url"' in kiosk
+    assert '"$kiosk_url"' in kiosk

@@ -71,6 +71,12 @@ For device `photo-viewer-1`:
 
 Accepted commands are `check`, `update`, `rollback`, `restart`, and `status`. Commands may be plain text or JSON with `command` and `request_id`. Retained commands are ignored so an old update cannot replay after a reboot.
 
+The HDMI kiosk normally opens `MANAGED_PI_VIEWER_URL`. An application can request a
+different full-screen page by writing one `http://` or `https://` URL to
+`/opt/managed-pi/data/kiosk-url` and terminating its own Chromium process. The kiosk
+service restarts Chromium and reads the requested URL. Applications should restore
+their local viewer URL when they start so a reboot always has a safe default.
+
 ## Security boundaries
 
 - MQTT credentials and private GitHub keys are never stored in this repository.

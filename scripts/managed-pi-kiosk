@@ -2,6 +2,15 @@
 set -eu
 
 viewer_url="${MANAGED_PI_VIEWER_URL:-http://127.0.0.1:8080}"
+kiosk_url_file="${MANAGED_PI_KIOSK_URL_FILE:-/opt/managed-pi/data/kiosk-url}"
+kiosk_url="$viewer_url"
+
+if [ -r "$kiosk_url_file" ]; then
+  requested_url="$(/usr/bin/head -n 1 "$kiosk_url_file" | /usr/bin/tr -d '\r\n')"
+  case "$requested_url" in
+    http://*|https://*) kiosk_url="$requested_url" ;;
+  esac
+fi
 
 while ! /usr/bin/curl --fail --silent --output /dev/null "$viewer_url/api/health"; do
   /usr/bin/sleep 2
@@ -15,4 +24,4 @@ exec /usr/bin/cage -s -- /usr/bin/chromium \
   --autoplay-policy=no-user-gesture-required \
   --ozone-platform=wayland \
   --enable-features=UseOzonePlatform \
-  "$viewer_url"
+  "$kiosk_url"
