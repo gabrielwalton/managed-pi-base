@@ -25,3 +25,23 @@ def test_image_starts_the_hdmi_kiosk():
     assert "managed-pi-kiosk.service" in layer
     assert "chromium" in layer
     assert "cage" in layer
+
+
+def test_agent_can_use_its_narrow_sudo_restart_rule():
+    service = (ROOT / "systemd" / "managed-pi-agent.service").read_text(
+        encoding="utf-8"
+    )
+    sudoers = (ROOT / "sudoers" / "managed-pi-service-control").read_text(
+        encoding="utf-8"
+    )
+    assert "NoNewPrivileges=true" not in service
+    assert "NOPASSWD: /usr/local/sbin/managed-pi-service-control restart" in sudoers
+
+
+def test_reported_agent_version_matches_package_version():
+    package = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    module = (ROOT / "src" / "managed_pi_agent" / "__init__.py").read_text(
+        encoding="utf-8"
+    )
+    assert 'version = "0.2.1"' in package
+    assert '__version__ = "0.2.1"' in module
