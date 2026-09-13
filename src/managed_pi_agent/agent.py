@@ -30,6 +30,7 @@ class Agent:
         )
         if config.mqtt_username:
             self.client.username_pw_set(config.mqtt_username, config.mqtt_password)
+        self.client.reconnect_delay_set(min_delay=1, max_delay=15)
         self.client.enable_logger(LOG)
         self.client.on_connect = self.on_connect
         self.client.on_disconnect = self.on_disconnect

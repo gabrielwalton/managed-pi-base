@@ -1,6 +1,6 @@
 # METABEGIN
 # X-Env-Layer-Name: managed-pi-base
-# X-Env-Layer-Version: 0.2.1
+# X-Env-Layer-Version: 0.3.0
 # X-Env-Layer-Category: application
 # X-Env-Layer-Desc: Managed Pi agent, system services and first-boot provisioning
 # X-Env-Layer-Requires: systemd-net-min,systemd-timesyncd

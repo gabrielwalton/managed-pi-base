@@ -25,6 +25,8 @@ EnvironmentFile=-/etc/managed-pi/app.env
 ExecStart=/usr/local/bin/managed-pi-kiosk
 Restart=always
 RestartSec=3
+KillMode=mixed
+TimeoutStopSec=10
 
 [Install]
 WantedBy=multi-user.target

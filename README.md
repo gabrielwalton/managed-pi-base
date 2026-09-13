@@ -43,6 +43,9 @@ See `examples/app/deploy`.
 
 Application hooks run as the unprivileged `managedpi` account. They cannot install operating-system packages or rewrite system services. Common OS dependencies should be included in the base image; unusual privileged changes require a reviewed base-image update.
 
+For the complete repeatable workflow, including Windows flashing and a new
+application checklist, see [Starting a new Managed Pi project](docs/new-project.md).
+
 ## One-time installation on a standard Raspberry Pi OS image
 
 Clone this repository on the Pi and run:
@@ -53,7 +56,9 @@ sudo ./scripts/install.sh
 
 Then copy `provision.env.example` to `managed-pi.env`, fill in the local values, and place it on the SD card boot partition at `/boot/firmware/managed-pi.env`. On the next boot it is moved to `/etc/managed-pi/agent.env` with protected permissions and removed from the boot partition.
 
-This manual route is primarily for the first development Pi. The same installer and first-boot mechanism are intended to be baked into the reusable image so future Pis only need their small provisioning file.
+The normal route is now the released reusable image. The manual installer is a
+development and recovery option; future Pis need only the image and their small
+provisioning file.
 
 ## Update topics
 
@@ -82,3 +87,6 @@ The management agent, atomic release deployment, automatic rollback, HDMI kiosk,
 system services, first-boot secret migration, MQTT Discovery, configuration
 validation and reproducible Pi 4/Pi 5 images are implemented. Applications can
 also inherit the Pi's MQTT identity and connection without duplicating secrets.
+The Pi 4 image has completed real-hardware provisioning and application-update
+validation; the remaining optional acceptance checks are tracked in
+[the field validation record](docs/field-validation-2026-09-13.md).
